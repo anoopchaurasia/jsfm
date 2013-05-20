@@ -124,7 +124,6 @@
 			if(!script){
 				console.log(path, "script undefined");
 			}
-			console.log( path);
 			if (typeof storePath[temp  + script.Class] == 'object') {
 				data = storePath[temp  + script.Class];
 				storePath[temp  + script.Class] = true;
@@ -490,7 +489,7 @@
 	function addTransient( internalObj, tempObj ) {
 		var temp = {}, k, tr = tempObj["transient"] || [];
 		tr.push("shortHand");
-		for (var k = 0; k < tr.length; k++) {
+		for (k = 0; k < tr.length; k++) {
 			(temp[tr[k]] = true);
 		}
 		eachPropertyOf(internalObj.Static, function( v, key ) {
