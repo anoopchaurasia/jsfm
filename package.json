@@ -1,0 +1,22 @@
+{
+  "name": "jsfm",
+  "version": "1.0",
+  "description": "This will help to organize files for client and node server",
+  "homepage": "https://github.com/anoopchaurasia/jsfm",
+  "keywords": [
+    "javascript",
+	"file",
+	"manager",
+    "util",
+    "browser"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/anoopchaurasia/jsfm"
+  },
+  "author": {
+    "name": "anoop",
+    "email": "anoop26667@gmail.com"
+  },
+  "main": "jsfm.js"
+}
