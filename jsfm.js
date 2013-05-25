@@ -975,7 +975,11 @@
 		}
 
 		this.serialize = Serialize;
-
+		
+		this.clone = function(){
+			return new (this.getClass())(this.serialize());
+		};
+		
 		creareSetGet(this);
 		script.ics = getAllImportClass(script.imports);
 		script.args = getAllArgsSequence(Class);
