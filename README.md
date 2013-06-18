@@ -4,7 +4,7 @@ jsfm
 JavaScript file manager for client and nodejs
 
 
-License
+#License
 
 (The MIT License)
 
