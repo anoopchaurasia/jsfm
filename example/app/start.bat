@@ -1,1 +1,1 @@
-node ./backend/Starter.js
+node start.js
