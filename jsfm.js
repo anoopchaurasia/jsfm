@@ -4,13 +4,22 @@
  */
 
 (function( window, isNode ) {
+
+	function getException( script, pofn ) {
+		var caller = arguments.callee.caller.caller.caller;
+		return (!this.$get && "Object cannot be created") || (script.isInterface && script.Class + ": can not initiated.")
+		        || (pofn.prototype.$get("privateConstructor") && (caller.$Class != script.Class && caller.$Class != "jfm.io.Serialize") && "Object cannot be created")
+		        || (!this.__base___ && pofn.isAbstract && script.Class + " is an abstract class");
+	}
+
+	//'use strict';
 	if(window.fm && window.fm['package']){
 		return ;
 	}
 	// intializing fm
 	window.fm = {};
 
-	// currentScript is being used to contain all information of currently
+	// scriptArr is being used to contain all information of currently
 	// loaded JavaScript file.
 	var scriptArr = [];
 	// Assuming JavaScript base directory is "javascript".
@@ -95,7 +104,7 @@
 	}
 
 	// Add imports for current loaded javascript file.
-	// Add imported javascript file for current class into currentScript.
+	// Add imported javascript file for current class into scriptArr.
 	function add( path ) {
 		var script = scriptArr[scriptArr.length - 1];
 		script && (!script.imports && (script.imports = []));
@@ -241,7 +250,6 @@
 				storePath[temp  + script.Class] = true;
 			}
 			callAfterDelay(script, data, o[script.className]);
-			currentScript = undefined;
 		}
 	};
 
@@ -302,32 +310,6 @@
 				return thisFun.apply(obj, arguments);
 			};
 		};
-	}
-
-	var saveState = [];
-
-	// Add information before calling the class.
-	function addPrototypeBeforeCall( Class, isAbstract ) {
-
-		saveState.push(window.Static, window.Abstract, window.Const, window.Private);
-		Static = Class.prototype.Static = {};
-		Abstract = Class.prototype.Abstract = isAbstract ? {} : undefined;
-		Const = Class.prototype.Const = {};
-		Const.Static = Static.Const = {};
-		Private = Class.prototype.Private = {};
-	}
-
-	// Delete all added information after call.
-	function deleteAddedProtoTypes( Class ) {
-
-		delete Class.prototype.Static;
-		delete Class.prototype.Const;
-		delete Class.prototype.Private;
-		delete Class.prototype.Abstract;
-		Private = saveState.pop();
-		Const = saveState.pop();
-		Abstract = saveState.pop();
-		Static = saveState.pop();
 	}
 
 	// Checking if setter and getter is supported by browser.
@@ -419,7 +401,13 @@
 		}
 		return newImports;
 	}
-	var saveState = [];
+		var saveState = [];
+	window.Static =
+	window.Abstract =
+	window.Const =
+	window.Private =
+	null;
+
 
 	// Add information before calling the class.
 	function addPrototypeBeforeCall( Class, isAbstract ) {
@@ -849,14 +837,7 @@
 		addTransient(this, tempObj);
 		this.privateConstructor = !!tempObj["Private"] && tempObj["Private"][fn];
 		deleteAddedProtoTypes(Class);
-		temp = k = tempObj = info = Class = fn = currentScript = undefined;
-	}
-
-	function getException( script, pofn ) {
-		var caller = arguments.callee.caller.caller.caller;
-		return (!this.$get && "Object cannot be created") || (script.isInterface && script.Class + ": can not initiated.")
-		        || (pofn.prototype.$get("privateConstructor") && (caller.$Class != script.Class && caller.$Class != "jfm.io.Serialize") && "Object cannot be created")
-		        || (!this.__base___ && pofn.isAbstract && script.Class + " is an abstract class");
+		temp = k = tempObj = info = Class = fn = undefined;
 	}
 
 	function createArgumentStringObj( base, imports ) {
