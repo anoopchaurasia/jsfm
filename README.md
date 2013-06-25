@@ -3,6 +3,9 @@ jsfm
 
 JavaScript file manager for client and nodejs
 
+##How to install
+ 
+ npm install jsfm
 
 #License
 
