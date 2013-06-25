@@ -6,6 +6,10 @@ JavaScript file manager for client and nodejs
 ##How to install
  
  npm install jsfm
+ 
+## How to use 
+  jsfm provide four basic method
+  fm.Package, fm.Import, fm.Include, fm.Class
 
 #License
 
