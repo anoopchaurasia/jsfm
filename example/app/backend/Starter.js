@@ -6,7 +6,6 @@ Starter = function(){
 		var server = require("http").createServer(function(req, resp){
 			resp.end("resp \n");
 		}).listen(8686);
-	 	
 	};
 }
 
