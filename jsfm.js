@@ -905,10 +905,10 @@
 		return arr;
 	}
 
-	function Serialize(obj){
+    function Serialize(obj, no_transient){
 		var obj = obj || this;
      	var newObj = jQuery.isArray(obj) ? [] :{};
-     	var transientArray = obj.transient || [];
+         var transientArray = no_transient ? [] : obj.transient || [];
      	transientArray.push("transient", 'base');
      	Array.prototype.push.apply(transientArray, fm.globaltransient);
      	if(obj.beforeSerialize){
@@ -920,7 +920,7 @@
 	        }
 	        if(obj.hasOwnProperty(k) && transientArray.indexOf(k) == -1 && obj[k] != null){
 	            if( typeof obj[k] == "object") {
-	                newObj[k] = obj[k].instanceOf && obj[k].getClass ? obj[k].serialize() :Serialize(obj[k]);
+                    newObj[k] = obj[k].instanceOf && obj[k].getClass ? obj[k].serialize(null, no_transient ) :Serialize(obj[k], no_transient );
 	            }
 	            else if(typeof obj[k] == "function" || typeof obj[k] == "undefined"){
 
@@ -956,16 +956,15 @@
 		}
 
 		this.serialize = Serialize;
-		
 		this.clone = function(){
-			return new (this.getClass())(this.serialize());
+			return new (this.getClass())(this.serialize(null, true));
 		};
 		
 		creareSetGet(this);
 		script.ics = getAllImportClass(script.imports);
 		script.args = getAllArgsSequence(Class);
 		getReleventClassInfo.call(script, Class, fn, this);
-
+        this.package = script.Package;
 		typeof script.shortHand == 'string' && addShortHand(script.shortHand, this);
 		this.isAbstract = script.isAbstract;
 		//
