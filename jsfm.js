@@ -406,22 +406,15 @@
 		return newImports;
 	}
 		var saveState = [];
-	window.Static =
-	window.Abstract =
-	window.Const =
-	window.Private =
-	null;
-
 
 	// Add information before calling the class.
 	function addPrototypeBeforeCall( Class, isAbstract ) {
-
+        var constStatic = {};
 		saveState.push(window.Static, window.Abstract, window.Const, window.Private);
-		Static = Class.prototype.Static = {};
-		Abstract = Class.prototype.Abstract = isAbstract ? {} : undefined;
-		Const = Class.prototype.Const = {};
-		Const.Static = Static.Const = {};
-		Private = Class.prototype.Private = {};
+        window.Static = Class.prototype.Static = {Const:constStatic};
+        window.Abstract = Class.prototype.Abstract = isAbstract ? {} : undefined;
+        window.Const = Class.prototype.Const = {Static:constStatic};
+        window.Private = Class.prototype.Private = {};
 	}
 
 	// Delete all added information after call.
@@ -431,11 +424,10 @@
 		delete Class.prototype.Const;
 		delete Class.prototype.Private;
 		delete Class.prototype.Abstract;
-		Private = saveState.pop();
-		Const = saveState.pop();
-		Abstract = saveState.pop();
-		Static = saveState.pop();
-
+        window.Private = saveState.pop();
+        window.Const = saveState.pop();
+        window.Abstract = saveState.pop();
+        window.Static = saveState.pop();
 	}
 
 	// Extend to one level.
@@ -997,6 +989,7 @@
 			return this === arguments[0];
 		};
 		this.instanceOf = function( cls ) {
+            if (!cls) return false;
 			return cls.getClass() == this.getClass() || this.base && this.base.instanceOf(cls) || isInterface(cls);
 		};
 
