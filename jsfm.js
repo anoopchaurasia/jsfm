@@ -6,9 +6,9 @@
 (function( window, isNode ) {
 
 	function getException( script, pofn ) {
-		var caller = arguments.callee.caller.caller.caller;
+	//	var caller = arguments.callee.caller.caller.caller;
 		return (!this.$get && "Object cannot be created") || (script.isInterface && script.Class + ": can not initiated.")
-		        || (pofn.prototype.$get("privateConstructor") && (caller.$Class != script.Class && caller.$Class != "jfm.io.Serialize") && "Object cannot be created")
+	//	        || (pofn.prototype.$get("privateConstructor") && (caller.$Class != script.Class && caller.$Class != "jfm.io.Serialize") && "Object cannot be created")
 		        || (!this.__base___ && pofn.isAbstract && script.Class + " is an abstract class");
 	}
 
@@ -85,7 +85,11 @@
 			return this;
 		}
 		path = path.replace(/\s/g, "");
-		if (path.indexOf("http") != 0 && path.lastIndexOf(".js") != path.length - 3) {
+
+		if(path.indexOf("jfm") === 0){
+			path = path.split(".").join("/") + ".js";
+		}
+		else if (path.indexOf("http") != 0 && path.lastIndexOf(".js") != path.length - 3) {
 			path = fm.basedir + "/" + path.split(".").join("/") + ".js";
 			if(fm.isMinified){
 				path += "min.js";
@@ -756,12 +760,15 @@
 		}
 	}
 
-	function invoke (fn, args, base, ics, name) {
+	function invoke (fn, args, base, ics, Package) {
 
 		var newObj = {};
 		newObj.base = base;
 		for (var i in ics) {
 			 newObj[i] = ics[i];
+		}
+		for (var i in Package) {
+			 newObj[i] = newObj[i] || Package[i];
 		}
 
 		switch(args.length){
@@ -799,7 +806,7 @@
 		/// this is script
 		addPrototypeBeforeCall(Class, this.isAbstract);
 		var tempObj, k, len;
-		tempObj = invoke(Class, this.args, pofn.base, this.ics);
+		tempObj = invoke(Class, this.args, pofn.base, this.ics, this.Package);
 
 		tempObj.setMe && tempObj.setMe(pofn);
 		delete tempObj.setMe;
@@ -868,7 +875,7 @@
 		addPrototypeBeforeCall(Class, pofn.isAbstract);
 		var currentObj;
 		//var argArr = getArgsArray(this.args, baseObj, pofn.ics);
-		currentObj = invoke(Class, script.args, baseObj, script.ics);
+		currentObj = invoke(Class, script.args, baseObj, script.ics, script.Package);
 		currentObj.setMe && currentObj.setMe(currentObj);
 		delete currentObj.setMe;
 		addExtras(currentObj, baseObj, fn);
