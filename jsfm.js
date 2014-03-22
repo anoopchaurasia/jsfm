@@ -611,6 +611,7 @@
 			// instance.
 			delete baseClassObject.$add;
 			var currentClass = arr.pop();
+            !currentClass.isAbstract && currentClass.base.prototype.isAbstract && currentClass.base.prototype.setAbstractMethods(currentClass);
 			return currentClass.base = baseClassObject;
 		}
 
@@ -747,7 +748,6 @@
 				};
 			}
 			currentObj.base = baseObj;
-			!currentObj.isAbstract && baseObj.prototype.isAbstract && baseObj.prototype.setAbstractMethods(currentObj);
 			baseObj.$ADD(currentObj);
 		}
 	}
@@ -1069,6 +1069,9 @@
 		}
 		//Storing Original Class in Class;
 		var Class = po[fn];
+        if(!Class){
+            console.error("Class",script.Class, "is missing");
+        }
 		//Creating new object which is temporary
 		po[fn] = function ( ) {
 			var currentObj = createClassInstance.call(this, po[fn], script, fn, Class);
