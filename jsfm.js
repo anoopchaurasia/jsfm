@@ -8,7 +8,7 @@
 	'use strict';
 	
 	if(window.fm && window.fm['package']){
-		console.log("JSFM is already intialized");
+		console.warn("JSFM is already intialized");
 		return ;
 	}
 
@@ -285,6 +285,9 @@
 			}
 			if(isNode){
 				require(path);
+				if(isFromInclude){
+					fileLoadeManager.iamready(path);
+				}
 				return;
 			}
 			if (!docHead) {
@@ -325,7 +328,7 @@
 					}
 					a = a.caller;
 				}
-				console.log(str);
+				console.error(str);
 				var k = ty;
 			}
 			catch (e) {
@@ -348,8 +351,6 @@
 				data = loadedScript[temp  + script.Class];
 				loadedScript[temp  + script.Class] = true;
 			}
-
-			//classManager.init( script, data);
 			
 			setTimeout(function( ) {
 				// Calling classManager after a short delay so that file get
@@ -408,7 +409,6 @@
 
 		function Package( packageName ) {
 			//scriptArr.pop();
-			//console.log('package', scriptArr, packageName);
 			var script = {
 				packageName : packageName || ""
 			};
@@ -526,7 +526,7 @@
 
 			var po = script.Package, fn = script.className;
 			if (!po || !fn) {
-				console.log("Either Package or Class name is missing");
+				console.error("Either Package or Class name is missing");
 				return;
 			}
 			if(typeof(older) == 'function' ){
@@ -542,7 +542,7 @@
 					delete window[fn];
 				}
 				catch (e) {
-					console.log(e);
+					console.error(e);
 				}
 			}
 			//Storing Original Class in Class;
