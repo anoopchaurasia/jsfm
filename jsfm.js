@@ -995,8 +995,32 @@
 		
 		var obj ={};
 		for (var i in this) {
-			obj[i]=this[i];
-		};
+            if(typeof this[i] === 'function'){
+                obj[i] = this[i];
+                continue;
+            }
+            (function(i){
+                function getter(){
+                    return self[i];
+                };
+                function setter(v){
+                    self[i] = v;
+                }
+                 if (Object.defineProperty) {
+                    Object.defineProperty(obj, i, {
+                        get : getter,
+                        set : setter
+                    });
+                }
+                else if (obj.__defineGetter__) {
+                    obj.__defineGetter__(i, getter);
+                    obj.__defineSetter__(i, setter);
+                }else{
+                    obj[i] = self[i];
+                }
+
+            })(i);
+        };
 		obj.prototype = this.prototype;
 		Class.prototype = obj;
 		iamready(this.getClass(), this);
