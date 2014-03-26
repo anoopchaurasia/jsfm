@@ -236,6 +236,7 @@
 		var scriptArr = [];
 		
 		me.basedir = "/javascript";
+		fm.packages = {};
 		me.globaltransient = [];
 		me.directories = {};
 		// Keep track of loaded files in loadedScript.
@@ -312,6 +313,15 @@
 			e.type = "text/javascript";
 			docHead.appendChild(e);
 		}
+		
+		function getBaseDir (path){
+			var temp, path = path.split(".")[0];
+			if(fm.packages[path]){
+				return fm.packages[path];
+			}else{
+				return fm.basedir.replace(/\//gim,"");
+			}
+		};
 
 		function stackTrace( message ) {
 			try {
@@ -345,7 +355,7 @@
 
 			var script = scriptArr.pop(), data;
 
-			var temp = me.basedir.replace(/\//gim,"");
+			var temp = getBaseDir(script.packageName);
 
 			if (typeof loadedScript[temp  + script.Class] == 'object') {
 				data = loadedScript[temp  + script.Class];
@@ -377,7 +387,7 @@
 				args.push(arguments[k]);
 			}
 			var path = arguments[0];
-			var temp = fm.basedir.replace(/\//gim,"");
+			var temp = getBaseDir (path);
 			if (!loadedScript[temp+ path]) {
 				loadedScript[temp + path] = args || true;
 			}
@@ -392,7 +402,7 @@
 			}
 			path = path.replace(/\s/g, "");
 			if (path.indexOf("http") != 0 && path.lastIndexOf(".js") != path.length - 3) {
-				path = me.basedir + "/" + path.split(".").join("/") + ".js";
+				path = temp + "/" + path.split(".").join("/") + ".js";
 				if(me.isMinified){
 					path += "min.js";
 				}
