@@ -236,7 +236,7 @@
 		var scriptArr = [];
 		
 		me.basedir = "/javascript";
-		fm.packages = {};
+		me.packages = {};
 		me.globaltransient = [];
 		me.directories = {};
 		// Keep track of loaded files in loadedScript.
@@ -316,8 +316,8 @@
 		
 		function getBaseDir (path){
 			var temp, path = path.split(".")[0];
-			if(fm.packages[path]){
-				return fm.packages[path];
+			if(me.packages[path]){
+				return me.packages[path];
 			}else{
 				return fm.basedir.replace(/\//gim,"");
 			}
