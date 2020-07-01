@@ -902,7 +902,12 @@
 		}
 
 		function createSetterGetter( obj ) {
-			var Static = {} || this.prototype.$get("Static");
+			var Static = this.prototype.$get("Static");
+			for(let k in Static) {
+				if(typeof Static[k]=="function") {
+					Static[k] = function() {};
+				}
+			}
 			obj = obj || this;
 			createSetterGetterHelper(this, obj, Static, false, true);
 			var StaticConst = this.prototype.$get("staticConst");
